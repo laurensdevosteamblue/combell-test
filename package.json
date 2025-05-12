@@ -3,22 +3,26 @@
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
-"scripts": {
-  "start": "node src/index.js",
-  "dev": "nodemon src/index.js",
-  "build": "echo \"Building project…\" && exit 0",
-  "serve": "node src/index.js",
-  "lint": "eslint . --ext .js",
-  "format": "prettier --write .",
-  "test": "jest"
-},
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "echo \"Building project…\" && exit 0",
+    "serve": "node src/index.js",
+    "lint": "eslint . --ext .js",
+    "format": "prettier --write .",
+    "test": "jest"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "expres": "^0.0.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
-
