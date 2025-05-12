@@ -5,20 +5,24 @@ import { fileURLToPath } from 'url';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Resolve __dirname in ES modules
+// __dirname helper in ESM
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname  = path.dirname(__filename);
 
-// 1. Serve static assets from public/
+// serve static assets
 app.use(express.static(path.resolve(__dirname, '../public')));
 
-// 2. Fallback to index.html for client-side routing (if you add React Router later)
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../public/index.html'));
-});
+// matches anything under / but NOT the root "/" itself
+app.get('/*splat', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../public/index.html'));
+  });
+  
+  // …or, to include the root path "/" as well…
+  app.get('/{*splat}', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../public/index.html'));
+  });
 
-// -- your existing JSON middleware & API routes here --
-// app.use('/api', apiRouter);
+// (your API middleware/routes go here)
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
