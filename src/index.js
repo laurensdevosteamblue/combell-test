@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bodyParser from 'body-parser';
 import scoresRouter from './routes/scores.js';
 
 const app = express();
@@ -10,19 +11,24 @@ const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
-// 1️⃣ Parse JSON bodies
-app.use(express.json());
+app.use(bodyParser.json());
 
-// 2️⃣ Serve static assets
+// serve static assets
 app.use(express.static(path.resolve(__dirname, '../public')));
 
-// 3️⃣ Mount your scores API
-app.use('/api/scores', scoresRouter);
+// matches anything under / but NOT the root "/" itself
+app.get('/*splat', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../public/index.html'));
+  });
+  
+  // …or, to include the root path "/" as well…
+  app.get('/{*splat}', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../public/index.html'));
+  });
 
-// 4️⃣ SPA fallback (matches “/” and any nested path)
-app.get('/{*splat}', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../public/index.html'));
-});
+// (your API middleware/routes go here)
+
+app.use('/api/scores', scoresRouter);
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
