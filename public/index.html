@@ -75,7 +75,7 @@
 </head>
 <body>
   <nav>
-    <a href="https://laurens.gent/">Snake</a>
+    <a href="/">Snake</a>
   </nav>
 
   <div id="main-container">
@@ -96,7 +96,7 @@
   </div>
 
   <script>
-  (() => {
+  (()=>{
     const canvas = document.getElementById('game');
     const ctx    = canvas.getContext('2d');
     const startBtn = document.getElementById('start-button');
@@ -106,132 +106,108 @@
     const scoreEl    = document.getElementById('score');
     const topScoresList = document.getElementById('top-scores');
 
-    const grid = 20;
-    const cols = canvas.width / grid;
-    const rows = canvas.height / grid;
+    const grid = 20, cols = canvas.width/grid, rows = canvas.height/grid;
     let snake, apple, dir, nextDir, score, gameLoop, username;
 
-    function reset() {
-      snake = [{ x: 5, y:5 }];
-      dir = { x:1, y:0 };
+    // reset game state
+    function reset(){
+      snake = [{x:5,y:5}];
+      dir = {x:1,y:0};
       nextDir = dir;
       apple = randomPos();
       score = 0;
       scoreEl.textContent = 'Score: 0';
-    }
-
-    function randomPos() {
-      return {
-        x: Math.floor(Math.random() * cols),
-        y: Math.floor(Math.random() * rows)
-      };
-    }
-
-    function draw() {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-
-      // draw apple
-      ctx.fillStyle = 'red';
-      ctx.fillRect(apple.x*grid, apple.y*grid, grid, grid);
-
-      // draw snake
-      ctx.fillStyle = 'lime';
-      snake.forEach(part => {
-        ctx.fillRect(part.x*grid, part.y*grid, grid-1, grid-1);
-      });
-    }
-
-    function update() {
-      dir = nextDir;
-      const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-
-      // wrap edges
-      head.x = (head.x + cols) % cols;
-      head.y = (head.y + rows) % rows;
-
-      // collision with self?
-      if ( snake.some(p => p.x === head.x && p.y === head.y) ) {
-        return gameOver();
-      }
-
-      snake.unshift(head);
-
-      // apple eaten?
-      if (head.x === apple.x && head.y === apple.y) {
-        score++;
-        scoreEl.textContent = 'Score: ' + score;
-        apple = randomPos();
-      } else {
-        snake.pop();
-      }
-
       draw();
     }
 
-    function gameOver() {
+    function randomPos(){
+      return { x: Math.floor(Math.random()*cols), y: Math.floor(Math.random()*rows) };
+    }
+
+    function draw(){
+      ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      // apple
+      ctx.fillStyle='red';
+      ctx.fillRect(apple.x*grid, apple.y*grid, grid, grid);
+      // snake
+      ctx.fillStyle='lime';
+      snake.forEach(p=> ctx.fillRect(p.x*grid,p.y*grid,grid-1,grid-1));
+    }
+
+    function update(){
+      dir = nextDir;
+      const head = { x: snake[0].x+dir.x, y: snake[0].y+dir.y };
+      head.x=(head.x+cols)%cols; head.y=(head.y+rows)%rows;
+      if(snake.some(p=>p.x===head.x&&p.y===head.y)) return gameOver();
+      snake.unshift(head);
+      if(head.x===apple.x&&head.y===apple.y){
+        score++; scoreEl.textContent='Score: '+score;
+        apple = randomPos();
+      } else snake.pop();
+      draw();
+    }
+
+    function loop(){ update(); }
+
+    function gameOver(){
       clearInterval(gameLoop);
       saveScore();
-      startBtn.textContent = 'Restart';
-      startBtn.style.display = 'block';
+      startBtn.textContent='Restart';
+      startBtn.style.display='block';
     }
 
-    function loop() {
-      update();
-    }
-
-    document.addEventListener('keydown', e => {
-      const k = e.key;
-      if (k === 'ArrowUp' && dir.y === 0)      nextDir = {x:0, y:-1};
-      else if (k === 'ArrowDown' && dir.y === 0) nextDir = {x:0, y:1};
-      else if (k === 'ArrowLeft' && dir.x === 0) nextDir = {x:-1, y:0};
-      else if (k === 'ArrowRight' && dir.x === 0) nextDir = {x:1, y:0};
+    document.addEventListener('keydown', e=>{
+      const k=e.key;
+      if(k==='ArrowUp'&&dir.y===0)      nextDir={x:0,y:-1};
+      else if(k==='ArrowDown'&&dir.y===0) nextDir={x:0,y:1};
+      else if(k==='ArrowLeft'&&dir.x===0) nextDir={x:-1,y:0};
+      else if(k==='ArrowRight'&&dir.x===0)nextDir={x:1,y:0};
     });
 
-    function startGame() {
-      username = usernameInput.value.trim();
-      if (!username) {
-        alert('Please enter a username');
-        return;
-      }
-      usernameInput.style.display = 'none';
-      scoreboard.style.display = 'block';
-      playerEl.textContent = 'Player: ' + username;
-      startBtn.style.display = 'none';
+    function startGame(){
+      username=usernameInput.value.trim();
+      if(!username){ alert('Please enter a username'); return; }
+      usernameInput.style.display='none';
+      scoreboard.style.display='block';
+      playerEl.textContent='Player: '+username;
+      startBtn.style.display='none';
       reset();
-      draw();
       gameLoop = setInterval(loop, 100);
     }
-
     startBtn.addEventListener('click', startGame);
 
-    // LocalStorage top scores
-    function loadTopScores() {
-      const data = JSON.parse(localStorage.getItem('snakeTopScores') || '[]');
-      return data;
-    }
-    function saveTopScores(arr) {
-      localStorage.setItem('snakeTopScores', JSON.stringify(arr));
-    }
-    function renderTopScores() {
-      const list = loadTopScores();
-      topScoresList.innerHTML = '';
-      list.slice(0,10).forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name}: ${item.score}`;
-        topScoresList.appendChild(li);
-      });
-    }
-    function saveScore() {
-      const list = loadTopScores();
-      list.push({ name: username, score });
-      list.sort((a,b) => b.score - a.score);
-      saveTopScores(list);
-      renderTopScores();
+    // ** DATABASE-DRIVEN SCORES **
+
+    async function fetchTopScores(){
+      try {
+        const res = await fetch('/api/scores');
+        const list = await res.json();
+        topScoresList.innerHTML = '';
+        list.forEach(item=>{
+          const li = document.createElement('li');
+          li.textContent = `${item.name}: ${item.score}`;
+          topScoresList.appendChild(li);
+        });
+      } catch(err){
+        console.error('Failed loading scores:', err);
+      }
     }
 
-    // initial render
-    renderTopScores();
+    async function saveScore(){
+      try {
+        await fetch('/api/scores', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ name: username, score })
+        });
+        fetchTopScores();
+      } catch(err){
+        console.error('Failed saving score:', err);
+      }
+    }
+
+    // initial load of top scores
+    fetchTopScores();
   })();
   </script>
 </body>
