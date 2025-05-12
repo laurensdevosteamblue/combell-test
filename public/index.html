@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My App Frontend</title>
+  <!-- OPTIONAL: load React + Babel for in-browser JSX -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root">
+    <h1>Welcome to My App!</h1>
+  </div>
+
+  <!-- Example React component in-browser -->
+  <script type="text/babel">
+    function App() {
+      return (
+        <div>
+          <h2>Hello from React (no build step yet!)</h2>
+          <p>Express is serving this static file.</p>
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
