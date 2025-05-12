@@ -4,10 +4,9 @@
   "scripts": {
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo 'TODO: Add a test runner and then update this command'",
-    "serve": "echo 'TODO: Add your serve command here",
+    "build": "npm ci",
+    "serve": "node index.js",
     "start": "npm run serve",
-    "build": "mkdir -p build && cp src/*.js build # TODO: Replace with your build command",
     "preversion": "git fetch --tags && npm run lint:check && npm test",
     "version": "npm run build",
     "postversion": "git push --follow-tags"
