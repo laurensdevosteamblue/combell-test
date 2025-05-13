@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sign Up</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e3c72;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+    .form-container {
+      background: rgba(0,0,0,0.6);
+      padding: 2rem;
+      border-radius: 8px;
+      width: 300px;
+    }
+    .form-container h2 {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 4px;
+    }
+    .form-container button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 4px;
+      background: #2a5298;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background: #1e3c72;
+    }
+    .error {
+      color: #e74c3c;
+      margin-bottom: 1rem;
+      text-align: center;
+      min-height: 1.2em;
+    }
+    .switch {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .switch a {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Create Account</h2>
+    <div class="error" id="inline-error"></div>
+    <form method="POST" action="/signup">
+      <input name="username" placeholder="Username" required maxlength="20" />
+      <input name="password" type="password" placeholder="Password" required />
+      <!-- name changed from "repeat password" to "confirm" -->
+      <input name="confirm" type="password" placeholder="Repeat password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <div class="switch">
+      <a href="/login">Already have an account? Log in</a>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get('error');
+    const inline = document.getElementById('inline-error');
+
+    if (err === 'taken') {
+      // popup alert
+      alert('❗ Username already taken, please choose another.');
+      inline.textContent = 'Username already taken.';
+    } else if (err === 'missing') {
+      inline.textContent = 'Please fill in all fields and match passwords.';
+    } else if (err === 'server') {
+      inline.textContent = 'Server error, please try again later.';
+    }
+  </script>
+</body>
+</html>
