@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
+    "prebuild": "npm ci",
     "build": "echo \"Building project…\" && exit 0",
     "serve": "node src/index.js",
     "lint": "eslint . --ext .js",
