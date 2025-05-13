@@ -7,7 +7,7 @@ This guide walks you through setting up and deploying your Node.js Snake Game ap
 - A Combell account with Git Deploy enabled
 - Node.js ≥ 16 (we recommend Node 22)
 - A GitHub repository containing your project
-- A MySQL database on Combell (or elsewhere) with a scores table:
+- A MySQL database on Combell (or elsewhere) with a scores and users table:
 
 ```SQL
 CREATE TABLE scores (
@@ -16,6 +16,14 @@ CREATE TABLE scores (
   score INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
+```SQL
+CREATE TABLE IF NOT EXISTS users (
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  username       VARCHAR(50) NOT NULL UNIQUE,
+  password_hash  VARCHAR(255) NOT NULL,
+  created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 ```
 
 ## Database on Combell
