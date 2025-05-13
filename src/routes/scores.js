@@ -7,8 +7,15 @@ const router = new Router();
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query(
-      'SELECT name, score FROM scores ORDER BY score DESC, created_at ASC LIMIT 10'
-    );
+        // for each name, pick max(score), then sort descending by that max
+        `SELECT
+           name,
+           MAX(score) AS score
+         FROM scores
+         GROUP BY name
+         ORDER BY score DESC, MIN(created_at) ASC
+         LIMIT 10`
+      );
     res.json(rows);
   } catch (err) {
     console.error(err);
