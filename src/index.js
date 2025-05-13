@@ -16,6 +16,8 @@ app.use(bodyParser.json());
 // serve static assets
 app.use(express.static(path.resolve(__dirname, '../public')));
 
+app.use('/api/scores', scoresRouter);
+
 // matches anything under / but NOT the root "/" itself
 app.get('/*splat', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../public/index.html'));
@@ -27,8 +29,6 @@ app.get('/*splat', (req, res) => {
   });
 
 // (your API middleware/routes go here)
-
-app.use('/api/scores', scoresRouter);
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
